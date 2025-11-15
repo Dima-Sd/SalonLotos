@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const basePath = "/SalonLotos/"; // 👈 НАЗВА ТВОГО РЕПОЗИТОРІЯ
+
   const path = window.location.pathname;
 
   const isThankYouPage = path.includes('dziekujemy');
@@ -7,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!isThankYouPage || isMasazePage) {
 
     // --- HEADER ---
-    fetch("./header.html")
+    fetch(basePath + "header.html")
       .then(response => response.text())
       .then(data => {
         document.body.insertAdjacentHTML("afterbegin", data);
@@ -35,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     // --- FOOTER ---
-    fetch("./footer.html")
+    fetch(basePath + "footer.html")
       .then(response => response.text())
       .then(data => {
         document.body.insertAdjacentHTML("beforeend", data);
