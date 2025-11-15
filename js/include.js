@@ -1,9 +1,3 @@
-// --- RESET ---
-const link = document.createElement('link');
-link.rel = 'stylesheet';
-link.href = './css/reset.css';
-document.head.appendChild(link);
-
 document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
 
