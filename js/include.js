@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         document.body.insertAdjacentHTML("afterbegin", data);
 
-        // LOGO
+        // LOGO (в хедері)
         const logo = document.querySelector(".logo img");
         if (logo) {
           logo.src = prefix + "img/logo2.svg";
@@ -82,6 +82,27 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((res) => res.text())
       .then((data) => {
         document.body.insertAdjacentHTML("beforeend", data);
+
+        // === ФІКС ШЛЯХІВ ДО ЗОБРАЖЕНЬ У ФУТЕРІ ===
+        const footerImages = document.querySelectorAll("footer img");
+
+        footerImages.forEach((img) => {
+          let src = img.getAttribute("src");
+          if (!src) return;
+
+          // не чіпаємо абсолютні й data-URL
+          if (src.startsWith("http") || src.startsWith("data:")) return;
+
+          // якщо вже є "../" — теж не чіпаємо, щоб не подвоїти
+          if (src.startsWith("../")) return;
+
+          // прибираємо можливі початкові "/" або "./"
+          src = src.replace(/^\/+/, "").replace(/^.\//, "");
+
+          // додаємо prefix: "" в корені, "../" у masaze
+          img.setAttribute("src", prefix + src);
+        });
+        // === КІНЕЦЬ ФІКСУ ФУТЕРА ===
       });
   }
 });
