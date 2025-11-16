@@ -316,13 +316,13 @@ footer {
 }
 
 .massage-box div {
-  display: flex;
   flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
 }
 
 .massage-box h4 {
+  font-weight: 700;
   font-size: 1.2em;
   margin-top: 10px;
 }
@@ -330,6 +330,17 @@ footer {
 .massage-box img {
   width: 300px;
   border-radius: 8px;
+}
+
+.massage-box a {
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.massage-box__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .btn-group {
