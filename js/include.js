@@ -4,25 +4,55 @@ document.addEventListener("DOMContentLoaded", () => {
   const isThankYouPage = path.includes("dziekujemy");
   const isMasazePage = path.includes("/masaze/");
 
-  // якщо це не сторінка подяки — підключаємо хедер/футер
+  // якщо ми на сторінці в папці masaze → треба "../" для header/footer/logo
+  const prefix = isMasazePage ? "../" : "";
+
   if (!isThankYouPage || isMasazePage) {
-
-    // якщо ми в папці /masaze/ → треба "../"
-    // якщо ми в корені → префікс порожній
-    const prefix = isMasazePage ? "../" : "";
-
     // --- HEADER ---
     fetch(prefix + "header.html")
       .then((res) => res.text())
       .then((data) => {
         document.body.insertAdjacentHTML("afterbegin", data);
 
-        // фіксим логотип
+        // LOGO
         const logo = document.querySelector(".logo img");
         if (logo) {
           logo.src = prefix + "img/logo2.svg";
         }
 
+        // ===== ВИПРАВЛЯЄМО ЛІНКИ МЕНЮ ДЛЯ СТОРІНОК У MASAZE =====
+        if (isMasazePage) {
+          const menuLinks = document.querySelectorAll(".menu a");
+
+          menuLinks.forEach((link) => {
+            let href = link.getAttribute("href");
+            if (
+              !href ||
+              href.startsWith("http") ||
+              href.startsWith("#") ||
+              href.startsWith("mailto:")
+            ) {
+              return; // зовнішні / якорі / mailto — не чіпаємо
+            }
+
+            // Якщо це посилання на масажі (masaze/...)
+            if (href.startsWith("masaze/")) {
+              // з масажних сторінок нам не потрібне "masaze/" перед файлом
+              // було: masaze/twarz.html -> стане: twarz.html
+              href = href.replace(/^masaze\//, "");
+              link.setAttribute("href", href);
+            } else {
+              // Інші сторінки (index.html, cennik.html, oferta.html...)
+              // з масажних сторінок треба вийти на рівень вище: ../index.html
+              if (!href.startsWith("../")) {
+                link.setAttribute("href", "../" + href);
+              }
+            }
+          });
+        }
+        // ===== КІНЕЦЬ ВИПРАВЛЕННЯ ЛІНКІВ =====
+
+        // SCROLLED header
         const content = document.querySelector(".header");
         if (content) {
           window.addEventListener("scroll", () => {
@@ -32,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
+        // MOBILE MENU
         const mobileButton = document.querySelector(".mobile-button");
         const menu = document.querySelector(".menu");
         const body = document.querySelector("body");
