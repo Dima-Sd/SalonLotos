@@ -4,13 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const isThankYouPage = path.includes('dziekujemy');
   const isMasazePage = path.includes('/masaze/');
 
-  // === АВТОМАТИЧНЕ ВИЗНАЧЕННЯ ГЛИБИНИ ===
-  // підрахунок, скільки папок у URL перед файлом
-  const depth = window.location.pathname
-    .replace(/\/$/, "") // прибрати trailing slash
-    .split("/").length - 2; // мінус домен і мінус файл
+  // === ВИЗНАЧЕННЯ ГЛИБИНИ ВІДНОСНО /SalonLotos/ ===
+  const rootFolder = "/SalonLotos/"; 
+  const relativePath = path.replace(rootFolder, ""); // видаляємо /SalonLotos/
 
-  // формування префікса ../ або ../../ або "" (для кореня)
+  const depth = relativePath.split("/").length - 1;
+
   let prefix = "";
   for (let i = 0; i < depth; i++) {
     prefix += "../";
@@ -20,43 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- HEADER ---
     fetch(prefix + "header.html")
-      .then(response => response.text())
+      .then(res => res.text())
       .then(data => {
         document.body.insertAdjacentHTML("afterbegin", data);
 
-        // === ФІКС ЛОГОТИПУ ===
+        // Фіксим логотип
         const logo = document.querySelector(".logo img");
         if (logo) {
           logo.src = prefix + "img/logo2.svg";
-        }
-
-        // === SCROLLED HEADER ===
-        const content = document.querySelector('.header');
-        if (content) {
-          window.addEventListener('scroll', () => {
-            const scrollPosition = window.scrollY || document.documentElement.scrollTop;
-            content.classList.toggle('scrolled', scrollPosition >= 100);
-          });
-        }
-
-        // === MOBILE MENU ===
-        const mobileButton = document.querySelector('.mobile-button');
-        const menu = document.querySelector('.menu');
-        const body = document.querySelector('body');
-
-        if (mobileButton && menu && body) {
-          mobileButton.addEventListener("click", function () {
-            const isHidden = menu.classList.contains('is-hidden');
-            this.classList.toggle('is-open', isHidden);
-            menu.classList.toggle('is-hidden', !isHidden);
-            body.classList.toggle('no-scroll', isHidden);
-          });
         }
       });
 
     // --- FOOTER ---
     fetch(prefix + "footer.html")
-      .then(response => response.text())
+      .then(res => res.text())
       .then(data => {
         document.body.insertAdjacentHTML("beforeend", data);
       });
