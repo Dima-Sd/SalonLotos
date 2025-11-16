@@ -4,18 +4,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const isThankYouPage = path.includes('dziekujemy');
   const isMasazePage = path.includes('/masaze/');
 
-  // === АВТО-ВИЗНАЧЕННЯ ПРАВИЛЬНОГО ШЛЯХУ ===
-  // Забираємо назву файлу (index.html, page1.html…)
-  const base = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, "/");
+  // === АВТОМАТИЧНЕ ВИЗНАЧЕННЯ ГЛИБИНИ ===
+  // підрахунок, скільки папок у URL перед файлом
+  const depth = window.location.pathname
+    .replace(/\/$/, "") // прибрати trailing slash
+    .split("/").length - 2; // мінус домен і мінус файл
+
+  // формування префікса ../ або ../../ або "" (для кореня)
+  let prefix = "";
+  for (let i = 0; i < depth; i++) {
+    prefix += "../";
+  }
 
   if (!isThankYouPage || isMasazePage) {
 
     // --- HEADER ---
-    fetch(base + "header.html")
+    fetch(prefix + "header.html")
       .then(response => response.text())
       .then(data => {
         document.body.insertAdjacentHTML("afterbegin", data);
 
+        // === ФІКС ЛОГОТИПУ ===
+        const logo = document.querySelector(".logo img");
+        if (logo) {
+          logo.src = prefix + "img/logo2.svg";
+        }
+
+        // === SCROLLED HEADER ===
         const content = document.querySelector('.header');
         if (content) {
           window.addEventListener('scroll', () => {
@@ -24,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
+        // === MOBILE MENU ===
         const mobileButton = document.querySelector('.mobile-button');
         const menu = document.querySelector('.menu');
         const body = document.querySelector('body');
@@ -39,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     // --- FOOTER ---
-    fetch(base + "footer.html")
+    fetch(prefix + "footer.html")
       .then(response => response.text())
       .then(data => {
         document.body.insertAdjacentHTML("beforeend", data);
