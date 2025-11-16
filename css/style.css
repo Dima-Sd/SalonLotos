@@ -34,7 +34,6 @@ body.no-scroll {
 .hero {
   position: relative;
   height: 100vh;
-  background: url('../img/gimnastyka.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
