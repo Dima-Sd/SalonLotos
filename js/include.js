@@ -4,10 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const isThankYouPage = path.includes('dziekujemy');
   const isMasazePage = path.includes('/masaze/');
 
+  // === АВТО-ВИЗНАЧЕННЯ ПРАВИЛЬНОГО ШЛЯХУ ===
+  // Забираємо назву файлу (index.html, page1.html…)
+  const base = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, "/");
+
   if (!isThankYouPage || isMasazePage) {
 
     // --- HEADER ---
-    fetch("./header.html")
+    fetch(base + "header.html")
       .then(response => response.text())
       .then(data => {
         document.body.insertAdjacentHTML("afterbegin", data);
@@ -35,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     // --- FOOTER ---
-    fetch("./footer.html")
+    fetch(base + "footer.html")
       .then(response => response.text())
       .then(data => {
         document.body.insertAdjacentHTML("beforeend", data);
