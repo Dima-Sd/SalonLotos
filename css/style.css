@@ -102,7 +102,7 @@ body.no-scroll {
 }
 
 .arrow-back:hover {
-  transform: translateX(-6px);
+  transform: translateX(10px) translateY(-50%);
 }
 
 .arrow-icon {
